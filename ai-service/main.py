@@ -85,14 +85,14 @@ def grade_battery(data: BatteryInput):
             "health_status": "Degraded" if soh_percent < 75 else "Healthy"
         },
         
-        "digital_material_passport": {
-            "passport_id": f"SS-BAT-{hash(data.capacity)}",
-            "circular_economy_impact": {
-                "carbon_offset_estimate_kg": carbon_offset_kg,
-                "potential_second_life_revenue_usd": round(soh_percent * 2.5, 2)
-            },
-            "material_composition_vulnerability": "High (Cobalt/Nickel)" if soh_percent < 50 else "Stable"
-        },
+        # "digital_material_passport": {
+        #     "passport_id": f"SS-BAT-{hash(data.capacity)}",
+        #     "circular_economy_impact": {
+        #         "carbon_offset_estimate_kg": carbon_offset_kg,
+        #         "potential_second_life_revenue_usd": round(soh_percent * 2.5, 2)
+        #     },
+        #     "material_composition_vulnerability": "High (Cobalt/Nickel)" if soh_percent < 50 else "Stable"
+        # },
 
         "ai_recommendation": {
             "primary_action": recommendation,
@@ -100,8 +100,8 @@ def grade_battery(data: BatteryInput):
             "technical_suitability": suitability
         },
 
-        "inference_details": {
-            "model_confidence": "High (RandomForest)",
-            "cycles_at_prediction": data.cycle
-        }
+        # "inference_details": {
+        #     "model_confidence": "High (RandomForest)",
+        #     "cycles_at_prediction": data.cycle
+        # }
     }
