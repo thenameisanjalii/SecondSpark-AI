@@ -5,7 +5,7 @@ from sklearn.metrics import r2_score
 import joblib
 
 # Load dataset
-df = pd.read_csv("battery_cycle_level_dataset_CLEAN_FINAL.csv")
+df = pd.read_csv("data/battery_cycle_level_dataset_CLEAN_FINAL.csv")
 
 # Features
 X = df[["cycle", "voltage", "temperature", "capacity"]]
@@ -37,6 +37,11 @@ predictions = model.predict(X_test)
 score = r2_score(y_test, predictions)
 
 print("R2 Score:", score)
+
+print("\nFeature Importance:")
+
+for feature, importance in zip(X.columns, model.feature_importances_):
+    print(f"{feature}: {importance:.4f}")
 
 # Save Model
 joblib.dump(model, "soh_model.pkl")
