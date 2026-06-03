@@ -1,7 +1,8 @@
 import joblib
 import pandas as pd
 
-model = joblib.load("soh_model.pkl")
+# Load from models directory
+model = joblib.load("models/soh_model.pkl")
 
 sample = pd.DataFrame([{
     "cycle": 1200,

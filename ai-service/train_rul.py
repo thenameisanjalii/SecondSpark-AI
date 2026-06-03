@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 import joblib
 
-df = pd.read_csv("battery_cycle_level_dataset_CLEAN_FINAL.csv")
+df = pd.read_csv("data/battery_cycle_level_dataset_CLEAN_FINAL.csv")
 
 X = df[["cycle", "voltage", "temperature", "capacity"]]
 
@@ -30,6 +30,10 @@ preds = model.predict(X_test)
 
 print("R2 Score:", r2_score(y_test, preds))
 
-joblib.dump(model, "rul_model.pkl")
+# Save Model to models directory
+import os
+if not os.path.exists("models"):
+    os.makedirs("models")
+joblib.dump(model, "models/rul_model.pkl")
 
-print("RUL Model Saved Successfully")
+print("RUL Model Saved Successfully to models/rul_model.pkl")

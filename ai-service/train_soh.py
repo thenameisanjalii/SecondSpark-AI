@@ -43,7 +43,10 @@ print("\nFeature Importance:")
 for feature, importance in zip(X.columns, model.feature_importances_):
     print(f"{feature}: {importance:.4f}")
 
-# Save Model
-joblib.dump(model, "soh_model.pkl")
+# Save Model to models directory
+import os
+if not os.path.exists("models"):
+    os.makedirs("models")
+joblib.dump(model, "models/soh_model.pkl")
 
-print("Model Saved Successfully")
+print("Model Saved Successfully to models/soh_model.pkl")

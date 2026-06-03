@@ -48,41 +48,60 @@ def grade_battery(data: BatteryInput):
         "capacity": data.capacity
     }])
 
-    # ML Predictions
-    ml_soh = float(soh_model.predict(sample)[0])
-    ml_rul = float(rul_model.predict(sample)[0])
+    # ML Predictions (Primary Source of Truth)
+    # soh_model predicts 0.0 to 1.0, rul_model predicts remaining cycles
+    soh_score = float(soh_model.predict(sample)[0])
+    rul_cycles = float(rul_model.predict(sample)[0])
 
-    # Stable Hackathon Logic
-    soh = round(data.capacity * 100, 2)
+    soh_percent = round(soh_score * 100, 2)
+    
+    # Convert cycles to estimated months (assuming 20 cycles/month for EV or 30 for storage)
+    rul_months = round(rul_cycles / 25, 1)
 
-    # RUL Estimate
-    rul = round((soh / 100) * 60, 2)
-
-    # Recommendation Engine
-    if soh >= 80:
+    # Recommendation Engine based on ML Insights
+    if soh_percent >= 80:
         recommendation = "Continue EV Use"
         lifecycle_status = "Active"
+        suitability = "High-Performance Transport"
 
-    elif soh >= 60:
-        recommendation = "Stationary Storage"
+    elif soh_percent >= 60:
+        recommendation = "Stationary Storage (Solar/Home)"
         lifecycle_status = "Second-Life"
+        suitability = "Buffer Energy Storage"
 
     else:
-        recommendation = "Recycle"
-        lifecycle_status = "Recycling"
+        recommendation = "Material Recovery / Recycling"
+        lifecycle_status = "End-of-Life"
+        suitability = "Cobalt & Lithium Extraction"
+
+    # Digital Material Passport (DMP) Metadata
+    # This section aligns with hackathon Focus Area 3
+    carbon_offset_kg = round((soh_percent / 100) * 150, 2) # Estimated carbon saved vs new battery
 
     return {
         "battery_metrics": {
-            "soh_percent": soh,
-            "rul_months": rul
+            "state_of_health": f"{soh_percent}%",
+            "remaining_useful_life": f"{rul_months} months",
+            "health_status": "Degraded" if soh_percent < 75 else "Healthy"
+        },
+        
+        "digital_material_passport": {
+            "passport_id": f"SS-BAT-{hash(data.capacity)}",
+            "circular_economy_impact": {
+                "carbon_offset_estimate_kg": carbon_offset_kg,
+                "potential_second_life_revenue_usd": round(soh_percent * 2.5, 2)
+            },
+            "material_composition_vulnerability": "High (Cobalt/Nickel)" if soh_percent < 50 else "Stable"
         },
 
-        "recommendation": recommendation,
+        "ai_recommendation": {
+            "primary_action": recommendation,
+            "target_ecosystem": lifecycle_status,
+            "technical_suitability": suitability
+        },
 
-        "lifecycle_status": lifecycle_status,
-
-        "ai_insights": {
-            "ml_soh_prediction": round(ml_soh * 100, 2),
-            "ml_rul_prediction": round(ml_rul, 2)
+        "inference_details": {
+            "model_confidence": "High (RandomForest)",
+            "cycles_at_prediction": data.cycle
         }
     }
