@@ -6,8 +6,8 @@ import joblib
 app = FastAPI(title="SecondSpark AI")
 
 # Load Models
-soh_model = joblib.load("soh_model.pkl")
-rul_model = joblib.load("rul_model.pkl")
+soh_model = joblib.load("models/soh_model.pkl")
+rul_model = joblib.load("models/rul_model.pkl")
 
 class BatteryInput(BaseModel):
     cycle: int
