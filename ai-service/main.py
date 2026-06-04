@@ -55,7 +55,12 @@ def grade_battery(data: BatteryInput):
 
     soh_percent = round(soh_score * 100, 2)
     
-    # Convert cycles to estimated months (assuming 20 cycles/month for EV or 30 for storage)
+    # Fix edge cases: clamp SOH to 0–100%, RUL to >= 0
+    # (ML model can overshoot on low-cycle inputs due to training noise)
+    soh_percent = max(0.0, min(100.0, soh_percent))
+    rul_cycles = max(0.0, rul_cycles)
+    
+    # Convert cycles to estimated months (assuming 25 cycles/month)
     rul_months = round(rul_cycles / 25, 1)
 
     # Recommendation Engine based on ML Insights
